@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -67,6 +66,8 @@ nav a.active {
 
 main {
   padding: 0 var(--space);
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .page {
@@ -118,14 +119,17 @@ p {
 
 .hero-image {
   width: 100%;
-  min-height: 280px;
+  max-height: 400px;
   aspect-ratio: 16 / 7;
   margin: 36px 0;
 }
 
+/* ปรับขนาดกรอบรูปเล็กลง */
 .small-image {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
+  max-height: 260px;
+  margin: 0 auto;
 }
 
 .wide-image {
@@ -157,9 +161,10 @@ p {
   margin-top: 24px;
 }
 
+/* ปรับแสดงเป็น 4 คอลัมน์เพื่อให้รูปภาพแคบลงและเล็กลง */
 .collection-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 28px 16px;
 }
 
@@ -178,6 +183,10 @@ footer {
   justify-content: space-between;
   font-size: 10px;
   letter-spacing: 1px;
+}
+
+@media (max-width: 850px) {
+  .collection-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 650px) {
@@ -235,182 +244,4 @@ footer {
     </div>
 
     <div class="section">
-      <div class="section-heading">
-        <h2>Selected Objects</h2>
-        <a href="#collection">VIEW ALL ↗</a>
-      </div>
-
-      <div class="collection-grid">
-        <div>
-          <div class="placeholder small-image">IMAGE 01</div>
-          <div class="item-info"><span>Object No. 01</span><span>↗</span></div>
-        </div>
-        <div>
-          <div class="placeholder small-image">IMAGE 02</div>
-          <div class="item-info"><span>Object No. 02</span><span>↗</span></div>
-        </div>
-        <div>
-          <div class="placeholder small-image">IMAGE 03</div>
-          <div class="item-info"><span>Object No. 03</span><span>↗</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- 02 STORY -->
-  <section class="page" id="story">
-    <div class="label">02 / THE STORY</div>
-
-    <h1>EVERY OBJECT<br>HAS A STORY.</h1>
-
-    <div class="section two-col">
-      <div>
-        <div class="placeholder wide-image">STORY IMAGE</div>
-      </div>
-
-      <div>
-        <div class="label">01 — THE BEGINNING</div>
-        <h2>Where it all began.</h2>
-        <div class="story-copy">
-          <p>
-            INTRODUCTION TEXT — Write about the beginning
-            of the collection and what inspired this project.
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div class="section two-col">
-      <div>
-        <div class="label">02 — THE IDEA</div>
-        <h2>Why these objects?</h2>
-        <div class="story-copy">
-          <p>
-            CONCEPT TEXT — Explain the meaning, memories,
-            and ideas behind the collection.
-          </p>
-        </div>
-      </div>
-
-      <div class="placeholder wide-image">DETAIL IMAGE</div>
-    </div>
-
-    <div class="section">
-      <div class="placeholder hero-image">FULL-WIDTH IMAGE / STORY END</div>
-    </div>
-  </section>
-
-
-  <!-- 03 COLLECTION -->
-  <section class="page" id="collection">
-    <div class="label">03 / THE ARCHIVE</div>
-
-    <h1>THE<br>COLLECTION.</h1>
-
-    <div class="section-heading section">
-      <p>A collection of selected objects.</p>
-      <p>01 — 06</p>
-    </div>
-
-    <div class="collection-grid">
-      <div>
-        <div class="placeholder small-image">OBJECT 01</div>
-        <div class="item-info"><span>Object Name</span><span>01</span></div>
-      </div>
-      <div>
-        <div class="placeholder small-image">OBJECT 02</div>
-        <div class="item-info"><span>Object Name</span><span>02</span></div>
-      </div>
-      <div>
-        <div class="placeholder small-image">OBJECT 03</div>
-        <div class="item-info"><span>Object Name</span><span>03</span></div>
-      </div>
-      <div>
-        <div class="placeholder small-image">OBJECT 04</div>
-        <div class="item-info"><span>Object Name</span><span>04</span></div>
-      </div>
-      <div>
-        <div class="placeholder small-image">OBJECT 05</div>
-        <div class="item-info"><span>Object Name</span><span>05</span></div>
-      </div>
-      <div>
-        <div class="placeholder small-image">OBJECT 06</div>
-        <div class="item-info"><span>Object Name</span><span>06</span></div>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- 04 ABOUT -->
-  <section class="page" id="about">
-    <div class="label">04 / ABOUT THE EXHIBITION</div>
-
-    <h1>BEHIND THE<br>COLLECTION.</h1>
-
-    <div class="section two-col">
-      <div class="placeholder wide-image">PORTRAIT / IMAGE</div>
-
-      <div>
-        <div class="label">THE COLLECTOR</div>
-        <h2>About the creator.</h2>
-
-        <div class="story-copy">
-          <p>
-            ABOUT TEXT — Introduce yourself, your interests,
-            and why you created this exhibition.
-          </p>
-        </div>
-
-        <div class="section">
-          <div class="label">PROJECT INFORMATION</div>
-          <p>Project / Exhibition Name</p>
-          <p>Year / Credits</p>
-          <p>Contact / Social Links</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="section">
-      <h2>Thank you for visiting.</h2>
-      <p>END OF EXHIBITION — 2026</p>
-    </div>
-  </section>
-
-</main>
-
-<footer>
-  <span>DIGITAL EXHIBITION</span>
-  <a href="#home">BACK TO TOP ↑</a>
-</footer>
-
-<script>
-const links = document.querySelectorAll("[data-page]");
-const pages = document.querySelectorAll(".page");
-
-function showPage() {
-  const pageId = location.hash.slice(1) || "home";
-  const validPage = document.getElementById(pageId);
-  const selected = validPage && validPage.classList.contains("page")
-    ? pageId : "home";
-
-  pages.forEach(page => {
-    page.classList.toggle("active", page.id === selected);
-  });
-
-  links.forEach(link => {
-    link.classList.toggle(
-      "active",
-      link.dataset.page === selected
-    );
-  });
-
-  window.scrollTo(0, 0);
-}
-
-window.addEventListener("hashchange", showPage);
-showPage();
-</script>
-
-</body>
-</html>
+      <div class="
