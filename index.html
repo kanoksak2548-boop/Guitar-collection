@@ -66,8 +66,6 @@ nav a.active {
 
 main {
   padding: 0 var(--space);
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .page {
@@ -119,17 +117,15 @@ p {
 
 .hero-image {
   width: 100%;
-  max-height: 400px;
+  min-height: 280px;
   aspect-ratio: 16 / 7;
   margin: 36px 0;
 }
 
-/* ปรับขนาดกรอบรูปเล็กลง */
+/* ปรับแก้ตรงนี้ให้กรอบรูปเล็กลง (เปลี่ยนจาก 4/5 เป็น 1/1) */
 .small-image {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-height: 260px;
-  margin: 0 auto;
 }
 
 .wide-image {
@@ -161,10 +157,9 @@ p {
   margin-top: 24px;
 }
 
-/* ปรับแสดงเป็น 4 คอลัมน์เพื่อให้รูปภาพแคบลงและเล็กลง */
 .collection-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 28px 16px;
 }
 
@@ -183,10 +178,6 @@ footer {
   justify-content: space-between;
   font-size: 10px;
   letter-spacing: 1px;
-}
-
-@media (max-width: 850px) {
-  .collection-grid { grid-template-columns: repeat(3, 1fr); }
 }
 
 @media (max-width: 650px) {
@@ -244,4 +235,56 @@ footer {
     </div>
 
     <div class="section">
-      <div class="
+      <div class="section-heading">
+        <h2>Selected Objects</h2>
+        <a href="#collection">VIEW ALL ↗</a>
+      </div>
+
+      <div class="collection-grid">
+        <div>
+          <div class="placeholder small-image">IMAGE 01</div>
+          <div class="item-info"><span>Object No. 01</span><span>↗</span></div>
+        </div>
+        <div>
+          <div class="placeholder small-image">IMAGE 02</div>
+          <div class="item-info"><span>Object No. 02</span><span>↗</span></div>
+        </div>
+        <div>
+          <div class="placeholder small-image">IMAGE 03</div>
+          <div class="item-info"><span>Object No. 03</span><span>↗</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 02 STORY -->
+  <section class="page" id="story">
+    <div class="label">02 / THE STORY</div>
+
+    <h1>EVERY OBJECT<br>HAS A STORY.</h1>
+
+    <div class="section two-col">
+      <div>
+        <div class="placeholder wide-image">STORY IMAGE</div>
+      </div>
+
+      <div>
+        <div class="label">01 — THE BEGINNING</div>
+        <h2>Where it all began.</h2>
+        <div class="story-copy">
+          <p>
+            INTRODUCTION TEXT — Write about the beginning
+            of the collection and what inspired this project.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section two-col">
+      <div>
+        <div class="label">02 — THE IDEA</div>
+        <h2>Why these objects?</h2>
+        <div class="story-copy">
+          <p>
+            CONCEPT TEXT — Explain
