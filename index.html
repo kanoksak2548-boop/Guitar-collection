@@ -122,7 +122,7 @@ p {
   margin: 36px 0;
 }
 
-/* ปรับแก้ตรงนี้ให้กรอบรูปเล็กลง (เปลี่ยนจาก 4/5 เป็น 1/1) */
+/* ปรับให้กรอบรูปเล็กลง (สัดส่วนสี่เหลี่ยมจัตุรัส 1/1) */
 .small-image {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -287,4 +287,130 @@ footer {
         <h2>Why these objects?</h2>
         <div class="story-copy">
           <p>
-            CONCEPT TEXT — Explain
+            CONCEPT TEXT — Explain the meaning, memories,
+            and ideas behind the collection.
+          </p>
+        </div>
+      </div>
+
+      <div class="placeholder wide-image">DETAIL IMAGE</div>
+    </div>
+
+    <div class="section">
+      <div class="placeholder hero-image">FULL-WIDTH IMAGE / STORY END</div>
+    </div>
+  </section>
+
+
+  <!-- 03 COLLECTION -->
+  <section class="page" id="collection">
+    <div class="label">03 / THE ARCHIVE</div>
+
+    <h1>THE<br>COLLECTION.</h1>
+
+    <div class="section-heading section">
+      <p>A collection of selected objects.</p>
+      <p>01 — 06</p>
+    </div>
+
+    <div class="collection-grid">
+      <div>
+        <div class="placeholder small-image">OBJECT 01</div>
+        <div class="item-info"><span>Object Name</span><span>01</span></div>
+      </div>
+      <div>
+        <div class="placeholder small-image">OBJECT 02</div>
+        <div class="item-info"><span>Object Name</span><span>02</span></div>
+      </div>
+      <div>
+        <div class="placeholder small-image">OBJECT 03</div>
+        <div class="item-info"><span>Object Name</span><span>03</span></div>
+      </div>
+      <div>
+        <div class="placeholder small-image">OBJECT 04</div>
+        <div class="item-info"><span>Object Name</span><span>04</span></div>
+      </div>
+      <div>
+        <div class="placeholder small-image">OBJECT 05</div>
+        <div class="item-info"><span>Object Name</span><span>05</span></div>
+      </div>
+      <div>
+        <div class="placeholder small-image">OBJECT 06</div>
+        <div class="item-info"><span>Object Name</span><span>06</span></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- 04 ABOUT -->
+  <section class="page" id="about">
+    <div class="label">04 / ABOUT THE EXHIBITION</div>
+
+    <h1>BEHIND THE<br>COLLECTION.</h1>
+
+    <div class="section two-col">
+      <div class="placeholder wide-image">PORTRAIT / IMAGE</div>
+
+      <div>
+        <div class="label">THE COLLECTOR</div>
+        <h2>About the creator.</h2>
+
+        <div class="story-copy">
+          <p>
+            ABOUT TEXT — Introduce yourself, your interests,
+            and why you created this exhibition.
+          </p>
+        </div>
+
+        <div class="section">
+          <div class="label">PROJECT INFORMATION</div>
+          <p>Project / Exhibition Name</p>
+          <p>Year / Credits</p>
+          <p>Contact / Social Links</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Thank you for visiting.</h2>
+      <p>END OF EXHIBITION — 2026</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span>DIGITAL EXHIBITION</span>
+  <a href="#home">BACK TO TOP ↑</a>
+</footer>
+
+<script>
+const links = document.querySelectorAll("[data-page]");
+const pages = document.querySelectorAll(".page");
+
+function showPage() {
+  const pageId = location.hash.slice(1) || "home";
+  const validPage = document.getElementById(pageId);
+  const selected = validPage && validPage.classList.contains("page")
+    ? pageId : "home";
+
+  pages.forEach(page => {
+    page.classList.toggle("active", page.id === selected);
+  });
+
+  links.forEach(link => {
+    link.classList.toggle(
+      "active",
+      link.dataset.page === selected
+    );
+  });
+
+  window.scrollTo(0, 0);
+}
+
+window.addEventListener("hashchange", showPage);
+showPage();
+</script>
+
+</body>
+</html>
