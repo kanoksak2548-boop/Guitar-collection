@@ -21,6 +21,7 @@
   --line-bright: rgba(255, 255, 255, 0.2);
   --accent: #3b82f6;
   --accent-glow: rgba(59, 130, 246, 0.35);
+  --gold-glow: rgba(234, 179, 8, 0.3);
   --space: 40px;
 }
 
@@ -45,7 +46,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background grid overlay resembling reference image */
+/* Background grid overlay */
 body::before {
   content: "";
   position: fixed;
@@ -56,6 +57,17 @@ body::before {
   background: 
     linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 20% 100%,
     radial-gradient(circle at 50% 30%, rgba(30, 40, 65, 0.4) 0%, rgba(9, 10, 15, 0.95) 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Interactive Particle Canvas */
+#particlesCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 0;
 }
@@ -184,6 +196,24 @@ h1 {
   color: #ffffff;
   margin-bottom: 30px;
   text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+  position: relative;
+}
+
+/* Dynamic Glowing Title Entrance Effect */
+.glow-title {
+  background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 50%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: titlePulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes titlePulse {
+  0% {
+    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.2));
+  }
+  100% {
+    filter: drop-shadow(0 0 35px rgba(59, 130, 246, 0.5));
+  }
 }
 
 h2 {
@@ -209,9 +239,9 @@ p {
   display: flex;
   justify-content: center;
   align-items: center;
+  will-change: transform;
 }
 
-/* Ring halo matching reference image */
 .hero-halo {
   position: absolute;
   width: min(500px, 70vw);
@@ -232,6 +262,7 @@ p {
   overflow: hidden;
   border: 1px solid var(--line);
   background: radial-gradient(circle, rgba(20,25,35,0.8) 0%, rgba(9,10,15,0.95) 100%);
+  will-change: transform;
 }
 
 .hero-image img {
@@ -244,7 +275,7 @@ p {
 }
 
 .hero-image:hover img {
-  transform: scale(1.03);
+  transform: scale(1.05);
 }
 
 .img-frame {
@@ -260,12 +291,35 @@ p {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.6s ease, filter 0.6s ease;
+  transition: transform 0.7s ease, filter 0.7s ease;
 }
 
 .img-frame:hover img {
-  transform: scale(1.05);
-  filter: brightness(1.05);
+  transform: scale(1.08);
+  filter: brightness(1.1);
+}
+
+/* Shimmer Light Sweep on Frame Hover */
+.img-frame::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  transition: all 0.8s ease;
+}
+
+.img-frame:hover::after {
+  left: 140%;
 }
 
 .small-image {
@@ -334,6 +388,7 @@ p {
   border-radius: 6px;
   border: 1px solid var(--line);
   transition: border-color 0.3s ease, transform 0.3s ease;
+  cursor: pointer;
 }
 
 .item-card:hover {
@@ -363,7 +418,6 @@ p {
   color: var(--accent);
 }
 
-/* Specs Overlay Badge */
 .specs-list {
   margin-top: 12px;
   padding-top: 12px;
@@ -372,6 +426,157 @@ p {
   justify-content: space-between;
   font-size: 11px;
   color: var(--text-muted);
+}
+
+/* ===== DETAIL PAGE STYLING ===== */
+.detail-container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 60px;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.detail-img-box {
+  width: 100%;
+  height: 550px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.detail-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Audio Player Control Widget */
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+.ctrl-btn:hover { color: #fff; }
+
+.play-main-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1.5px solid #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s;
+}
+.play-main-btn:hover {
+  background: #ef4444;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.laser-divider {
+  width: 100%;
+  height: 2px;
+  background: #ef4444;
+  box-shadow: 0 0 12px #ef4444;
+  margin: 10px 0;
+}
+
+.detail-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: #fff;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.song-credit {
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  color: var(--text-muted);
+}
+.song-credit span {
+  color: #fff;
+  font-weight: 500;
+}
+
+.back-series-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border-radius: 30px;
+  border: 1px solid var(--line-bright);
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #fff;
+  width: fit-content;
+  background: rgba(255,255,255,0.03);
+  margin-top: 10px;
+  cursor: pointer;
+}
+.back-series-btn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: #fff;
+}
+
+/* Modal Popup สำหรับเล่นเพลง YouTube */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 800px;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 8px;
+  border: 1px solid var(--line-bright);
+  overflow: hidden;
+}
+.modal-close {
+  position: absolute;
+  top: -40px; right: 0;
+  background: none; border: none;
+  color: #fff; font-size: 16px; letter-spacing: 2px;
+  cursor: pointer;
+  text-transform: uppercase;
 }
 
 /* Footer */
@@ -393,50 +598,150 @@ footer a:hover {
   color: #fff;
 }
 
-/* Responsive Styles */
+/* ===== ADDITIONAL VISUAL EFFECTS ===== */
+
+/* Magnetic Element Base Class */
+.magnetic-btn {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+  will-change: transform;
+}
+
+/* Dynamic Cursor Light Follower */
+.cursor-glow {
+  position: fixed;
+  width: 450px;
+  height: 450px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.12) 0%, rgba(9, 10, 15, 0) 70%);
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: width 0.3s ease, height 0.3s ease;
+  mix-blend-mode: screen;
+}
+
+/* Hero Halo Breath Pulse Effect */
+@keyframes haloPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.12), inset 0 0 25px rgba(255, 255, 255, 0.08);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 70px rgba(59, 130, 246, 0.25), inset 0 0 45px rgba(59, 130, 246, 0.15);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.12), inset 0 0 25px rgba(255, 255, 255, 0.08);
+  }
+}
+
+.hero-halo {
+  animation: haloPulse 6s ease-in-out infinite;
+}
+
+/* Glassmorphism & Hover Spotlight for Item Cards */
+.item-card {
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, box-shadow 0.4s ease;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.item-card::before {
+  content: "";
+  position: absolute;
+  top: 0; left: -100%;
+  width: 50%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transform: skewX(-25deg);
+  transition: left 0.75s ease;
+}
+
+.item-card:hover::before {
+  left: 150%;
+}
+
+.item-card:hover {
+  box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.25), 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+/* Scroll Reveal Animations */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Click Ring Flare Effect */
+.click-ripple {
+  position: fixed;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  pointer-events: none;
+  z-index: 9999;
+  animation: rippleFx 0.6s ease-out forwards;
+}
+
+@keyframes rippleFx {
+  0% {
+    width: 0px;
+    height: 0px;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: 0 0 10px var(--accent);
+  }
+  100% {
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.5);
+    box-shadow: 0 0 25px rgba(239, 68, 68, 0);
+  }
+}
+
+/* Responsive */
 @media (max-width: 900px) {
   .collection-grid { grid-template-columns: repeat(2, 1fr); }
-  .hero-image { height: 400px; }
+  .detail-container { grid-template-columns: 1fr; gap: 30px; }
+  .detail-img-box { height: 380px; }
 }
 
 @media (max-width: 650px) {
   :root { --space: 20px; }
-
-  header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-    padding: 16px var(--space);
-  }
-
-  nav {
-    gap: 14px;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-
+  header { flex-direction: column; align-items: flex-start; gap: 16px; padding: 16px var(--space); }
+  nav { gap: 14px; flex-wrap: wrap; width: 100%; }
   nav a { font-size: 10px; }
-
-  .two-col { grid-template-columns: 1fr; gap: 28px; }
   .collection-grid { grid-template-columns: 1fr; }
-  .section { margin-top: 60px; }
-  .hero-image { height: 280px; }
-  .hero-halo { width: 220px; height: 220px; }
-  h1 { font-size: 36px; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- Interactive Particles Background Canvas -->
+<canvas id="particlesCanvas"></canvas>
+
+<!-- Cursor Glow Background Element -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
 <header>
-  <a class="logo" href="#home">GUITAR <span>/</span> MUSEUM</a>
+  <a class="logo magnetic-btn" href="#home">GUITAR <span>/</span> MUSEUM</a>
 
   <nav>
-    <a href="#home" data-page="home" class="active">01 HOME</a>
-    <a href="#story" data-page="story">02 STORY</a>
-    <a href="#collection" data-page="collection">03 ARCHIVE</a>
-    <a href="#about" data-page="about">04 ABOUT</a>
+    <a href="#home" data-page="home" class="active magnetic-btn">HOME</a>
+    <a href="#story" data-page="story" class="magnetic-btn">STORY</a>
+    <a href="#collection" data-page="collection" class="magnetic-btn">ARCHIVE</a>
+    <a href="#about" data-page="about" class="magnetic-btn">ABOUT</a>
   </nav>
 </header>
 
@@ -446,30 +751,30 @@ footer a:hover {
   <section class="page active" id="home">
     <div class="label">DIGITAL EXHIBITION / 2026 EDITION</div>
 
-    <h1>MUSEUM OF<br>LEGENDARY GUITARS.</h1>
+    <h1 class="parallax-title glow-title" data-speed="0.05">MUSEUM OF<br>LEGENDARY GUITARS.</h1>
 
-    <div class="hero-wrapper">
+    <div class="hero-wrapper parallax-hero" data-speed="0.15">
       <div class="hero-halo"></div>
       <div class="hero-image img-frame">
-        <img src="guitar_schter.jpg" alt="1959 Gibson Les Paul Standard Hero" id="hero-img">
+        <img src="https://i.pinimg.com/1200x/63/ad/de/63adde8ed8d22fc0d41267120bb974f4.jpg" alt="1959 Gibson Les Paul Standard Hero" id="hero-img">
       </div>
     </div>
 
-    <div class="two-col">
+    <div class="two-col parallax-section" data-speed="0.08">
       <p>An extraordinary curated repository celebrating six decades of iconic craftsmanship, electric resonance, and acoustic innovation that shaped modern music history.</p>
       <p style="text-align: right; letter-spacing: 2px; color: var(--accent); font-size: 12px;">SCROLL TO EXPLORE ARCHIVE ↘</p>
     </div>
 
     <div class="section">
       <div class="section-heading">
-        <h2>Selected Masterpieces</h2>
-        <a href="#collection">VIEW FULL ARCHIVE (06) ↗</a>
+        <h2>Selected Collections</h2>
+        <a href="#collection" class="magnetic-btn">VIEW FULL ARCHIVE (06) ↗</a>
       </div>
 
       <div class="collection-grid">
-        <div class="item-card">
+        <div class="item-card reveal" onclick="openDetail(0)">
           <div class="img-frame small-image">
-            <img src="guitar_schter.jpg" alt="Schecter Sun Valley">
+            <img src="https://static.wixstatic.com/media/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg/v1/fill/w_520,h_693,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg" alt="Schecter Sun Valley">
           </div>
           <div class="item-info">
             <span class="item-title">Schecter Sun Valley</span>
@@ -481,9 +786,9 @@ footer a:hover {
           </div>
         </div>
 
-        <div class="item-card">
+        <div class="item-card reveal" onclick="openDetail(1)">
           <div class="img-frame small-image">
-            <img src="guitar_timhenzon.jpg" alt="Ibanez TOD10 Tim Henson">
+            <img src="https://www.musicarms.net/wp-content/uploads/2022/12/IBANEZ-TOD10-3.jpg" alt="Ibanez TOD10 Tim Henson">
           </div>
           <div class="item-info">
             <span class="item-title">Ibanez TOD10 Tim Henson</span>
@@ -495,9 +800,9 @@ footer a:hover {
           </div>
         </div>
 
-        <div class="item-card">
+        <div class="item-card reveal" onclick="openDetail(2)">
           <div class="img-frame small-image">
-            <img src="guitar_jim.jpg" alt="Fender Stratocaster Olympic White">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnANO7jljpWGZX41ofp1rWvzwj0ZwA4vqLW1FaOgDcMn6iTPEMQ0ufQXA&s=10" alt="Fender Stratocaster Olympic White">
           </div>
           <div class="item-info">
             <span class="item-title">Fender Stratocaster</span>
@@ -515,68 +820,55 @@ footer a:hover {
 
   <!-- 02 STORY -->
   <section class="page" id="story">
-    <div class="label">02 / HISTORICAL TIMELINE</div>
+    <div class="label">HISTORICAL TIMELINE</div>
 
-    <h1>EVERY STRING<br>TELLS A STORY.</h1>
+    <h1 class="glow-title">History<br> of the Guitar</h1>
 
     <div class="section two-col">
       <div class="img-frame wide-image">
-        <img src="https://images.unsplash.com/photo-1525201548942-d8732f6617a0?auto=format&fit=crop&w=1200&q=80" alt="Luthier Workshop">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzGjK4ML6D9RXL2Qd6gDbm1qvnf-_DCPru1U-1I22S3o8oWZIWZjAC7iv_&s=10" alt="Luthier Workshop">
       </div>
 
       <div>
-        <div class="label">01 — THE GENESIS (1950s)</div>
+        <div class="label">THE GENESIS (1950s)</div>
         <h2>The Birth of Solid Body Resonance.</h2>
         <div class="story-copy">
-          <p>
-            The 1950s marked a pivotal shift from acoustic chambering to solid-body electric power. Innovators like Leo Fender and Ted McCarty transformed timber and electromagnetic pickups into instruments capable of filling stadiums.
-          </p>
-          <p>
-            These pioneering instruments gave birth to Rock & Roll, Blues, and modern recording techniques that still define tone standards today.
-          </p>
+          <p>The 1950s marked a pivotal shift from acoustic chambering to solid-body electric power. Innovators like Leo Fender and Ted McCarty transformed timber and electromagnetic pickups into instruments capable of filling stadiums.</p>
+          <p>These pioneering instruments gave birth to Rock & Roll, Blues, and modern recording techniques that still define tone standards today.</p>
         </div>
       </div>
     </div>
 
     <div class="section two-col">
       <div>
-        <div class="label">02 — CRAFTSMANSHIP & TONESHAPING</div>
+        <div class="label">CRAFTSMANSHIP & TONESHAPING</div>
         <h2>Wood, Magnetics & Pure Expression.</h2>
         <div class="story-copy">
-          <p>
-            Each instrument in this archive represents thousands of hours of hand-carved artistry. From Brazilian Rosewood fingerboards to hand-wound Alnico magnets, every nuance shapes human emotion into soundwaves.
-          </p>
+          <p>Each instrument in this archive represents thousands of hours of hand-carved artistry. From Brazilian Rosewood fingerboards to hand-wound Alnico magnets, every nuance shapes human emotion into soundwaves.</p>
         </div>
       </div>
 
       <div class="img-frame wide-image">
-        <img src="https://images.unsplash.com/photo-1558098329-a11cff621064?auto=format&fit=crop&w=1200&q=80" alt="Guitar Close Up Detail">
-      </div>
-    </div>
-
-    <div class="section">
-      <div class="img-frame hero-image">
-        <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1600&q=80" alt="Concert Stage Guitar Tone">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_nQ_pO2SRUYU2OuJOImor6MhoDGWDJKp1jHRG9GRqeqVSV9gk5uIQLy2E&s=10" alt="Guitar Close Up Detail">
       </div>
     </div>
   </section>
 
 
-  <!-- 03 COLLECTION -->
+  <!-- 03 COLLECTION (ARCHIVE) -->
   <section class="page" id="collection">
-    <div class="label">03 / THE PERMANENT ARCHIVE</div>
+    <div class="label">THE PERMANENT ARCHIVE</div>
 
-    <h1>THE<br>COLLECTION.</h1>
+    <h1 class="glow-title">THE<br>COLLECTION.</h1>
 
     <div class="section-heading section">
-      <p>Curated showcase of rare electric & acoustic masterworks.</p>
-      <p style="color: var(--accent);">CATALOGUE: 01 — 06</p>
+      <p>Curated showcase of rare electric & acoustic masterworks. Click any guitar to view detailed performance showcase.</p>
     </div>
 
     <div class="collection-grid">
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(0)">
         <div class="img-frame small-image">
-          <<img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8" alt="Test">
+          <img src="https://static.wixstatic.com/media/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg/v1/fill/w_520,h_693,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg" alt="Schecter">
         </div>
         <div class="item-info">
           <span class="item-title">Schecter Sun Valley</span>
@@ -588,9 +880,9 @@ footer a:hover {
         </div>
       </div>
 
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(1)">
         <div class="img-frame small-image">
-          <img src="guitar_timhenzon.jpg" alt="Ibanez TOD10 Tim Henson Signature">
+          <img src="https://www.musicarms.net/wp-content/uploads/2022/12/IBANEZ-TOD10-3.jpg" alt="Ibanez TOD10">
         </div>
         <div class="item-info">
           <span class="item-title">Ibanez TOD10 Tim Henson</span>
@@ -602,9 +894,9 @@ footer a:hover {
         </div>
       </div>
 
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(2)">
         <div class="img-frame small-image">
-          <img src="guitar_jim.jpg" alt="Fender Stratocaster Olympic White">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnANO7jljpWGZX41ofp1rWvzwj0ZwA4vqLW1FaOgDcMn6iTPEMQ0ufQXA&s=10" alt="Fender Stratocaster">
         </div>
         <div class="item-info">
           <span class="item-title">Fender Stratocaster</span>
@@ -616,23 +908,23 @@ footer a:hover {
         </div>
       </div>
 
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(3)">
         <div class="img-frame small-image">
-          <img src="guitar_layla.jpg" alt="Fender Player II Stratocaster HSS">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjCU6s0zrJ8lWVmZ0uJ-SK0YSEKvI8Y3j6NHbO3Nm3bBh2faah1x3yKdUj&s=10" alt="Fender HSS">
         </div>
         <div class="item-info">
           <span class="item-title">Fender Stratocaster HSS</span>
           <span class="item-meta">#04</span>
         </div>
         <div class="specs-list">
-          <span>Black / White Pickguard</span>
-          <span>HSS Pickup Configuration</span>
+          <span>Black / White Guard</span>
+          <span>HSS Pickup</span>
         </div>
       </div>
 
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(4)">
         <div class="img-frame small-image">
-          <img src="guitar_acdc.jpg" alt="Gibson SG Standard">
+          <img src="https://guitarfactory.net/cdn/shop/files/GibsonSGStandard-01_e0baea13-ba49-4d2d-9919-04be87f75b13.jpg?v=1754964103" alt="Gibson SG">
         </div>
         <div class="item-info">
           <span class="item-title">Gibson SG Standard</span>
@@ -644,9 +936,9 @@ footer a:hover {
         </div>
       </div>
 
-      <div class="item-card">
+      <div class="item-card reveal" onclick="openDetail(5)">
         <div class="img-frame small-image">
-          <img src="guitar_martin.jpg" alt="Martin Acoustic Guitar">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWHHSO1C5l95_cvJ1fw2PDaxb190CBTCMQ_CxE45AKD-CNuurnciJGlhnV&s=10" alt="Martin Acoustic">
         </div>
         <div class="item-info">
           <span class="item-title">Martin OM-28 / Acoustic</span>
@@ -654,7 +946,7 @@ footer a:hover {
         </div>
         <div class="specs-list">
           <span>Natural Spruce Top</span>
-          <span>Museum Spotlight Edition</span>
+          <span>Museum Spotlight</span>
         </div>
       </div>
     </div>
@@ -663,65 +955,186 @@ footer a:hover {
 
   <!-- 04 ABOUT -->
   <section class="page" id="about">
-    <div class="label">04 / ABOUT THE ARCHIVE</div>
+    <div class="label">ABOUT THE ARCHIVE</div>
 
-    <h1>BEHIND THE<br>COLLECTION.</h1>
+    <h1 class="glow-title">BEHIND THE<br>COLLECTION.</h1>
 
     <div class="section two-col">
       <div class="img-frame wide-image">
-        <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80" alt="Curator and Collector Studio">
+        <img src="https://i.pinimg.com/736x/71/82/08/718208997ef4ef678309480e6371c843.jpg" alt="Studio">
       </div>
 
       <div>
         <div class="label">THE CURATOR</div>
-        <h2>Preserving Sonic History.</h2>
-
+        <h2>About Me</h2>
         <div class="story-copy">
-          <p>
-            Founded by vintage acoustic scholars and luthiers, the Guitar Museum Exhibition provides a high-fidelity digital catalog of rare, golden-era stringed instruments.
-          </p>
-          <p>
-            Our mission is to archive the physical specifications, provenance, and cultural significance of musical instruments that defined generations of sound.
-          </p>
-        </div>
-
-        <div class="section" style="margin-top: 40px;">
-          <div class="label">ARCHIVE INFORMATION</div>
-          <p><strong style="color:#fff;">Project:</strong> International Guitar Preservation Exhibition</p>
-          <p><strong style="color:#fff;">Year:</strong> 2026 Digital Collection</p>
-          <p><strong style="color:#fff;">Location:</strong> Sound & Resonance Gallery</p>
+          <p>I am a Digital Media student with an interest in music, design, and the stories hidden within everyday objects. Among them, guitars hold a special place for me. They are more than just musical instruments; they are objects with unique identities, defined by their shapes, materials, details, and individual histories.</p>
+          <p>I am a Digital Media student with an interest in music, design, and the stories hidden within everyday objects. Among them, guitars hold a special place for me. They are more than just musical instruments; they are objects with unique identities, defined by their shapes, materials, details, and individual histories.</p>
         </div>
       </div>
     </div>
-
-    <div class="section" style="text-align: center; border-top: 1px solid var(--line); padding-top: 60px;">
-      <h2>Thank you for visiting the archive.</h2>
-      <p style="margin-top: 12px; color: var(--accent);">DIGITAL GUITAR EXHIBITION — 2026</p>
-    </div>
   </section>
+
+
+  <!-- DYNAMIC GUITAR DETAIL PAGE -->
+  <section class="page" id="guitar-detail">
+    <div class="detail-container">
+      <div class="detail-img-box img-frame">
+        <img id="det-img" src="" alt="Guitar Detail">
+      </div>
+
+      <div class="detail-content">
+        <div class="audio-controls">
+          <button class="ctrl-btn magnetic-btn" onclick="prevGuitar()">⏮ PREV</button>
+          <button class="play-main-btn magnetic-btn" onclick="playMusicModal()" title="Play Song/Video">▶</button>
+          <button class="ctrl-btn magnetic-btn" onclick="nextGuitar()">NEXT ⏭</button>
+        </div>
+
+        <div class="laser-divider"></div>
+
+        <h2 class="detail-title" id="det-title">GUITAR NAME</h2>
+        <p class="song-credit">Featured Performance Track:<br><span id="det-song">Song Name</span></p>
+
+        <p id="det-specs" style="color: var(--text-muted); font-size: 13px; line-height: 1.6;">
+          รายละเอียดสเปกและประวัติเครื่องดนตรี คัดสรรโทนเสียงระดับตำนาน
+        </p>
+
+        <button class="back-series-btn magnetic-btn" onclick="goBackToArchive()">
+      ← View series / Archive
+    </button>
+  </div>
+</div>
 
 </main>
 
+<!-- MODAL YOUTUBE VIDEO PLAYER -->
+<div class="modal-overlay" id="videoModal" onclick="closeMusicModal(event)">
+  <div class="modal-content">
+    <button class="modal-close magnetic-btn" onclick="closeMusicModalDirect()">[ CLOSE ✕ ]</button>
+    <iframe id="youtubePlayer" width="100%" height="100%" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+</div>
+
 <footer>
-  <span>THE VINTAGE GUITAR ARCHIVE</span>
-  <a href="#home">BACK TO TOP ↑</a>
+  <span>THE GUITAR ARCHIVE</span>
+  <a href="#home" class="magnetic-btn">BACK TO TOP ↑</a>
 </footer>
 
 <script>
-// Select all navigation and internal anchor links
+// ข้อมูลกีต้าร์ทั้งหมด 6 ตัว พร้อมลิงก์ YouTube (Embed ID)
+const guitarsData = [
+  {
+    title: "Schecter Sun Valley Super Shredder",
+    img: "https://static.wixstatic.com/media/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg/v1/fill/w_520,h_693,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/114bb8_8f781c32853841a6bc055040adfec9a7~mv2.jpeg",
+    song: "Unholy Confessions (A7X)",
+    youtubeId: "qFfnlYbFEiE",
+    specs: "Sky Blue Finish, Floyd Rose Special Tremolo, Active EMG Pickups for aggressive high-gain shredding."
+  },
+  {
+    title: "Ibanez TOD10 Tim Henson",
+    img: "https://www.musicarms.net/wp-content/uploads/2022/12/IBANEZ-TOD10-3.jpg",
+    song: "Polyphia | G.O.A.T. (Official Music Video)",
+    youtubeId: "o-cs1AxOBE4",
+    specs: "Metallic Mauve Finish, Tree of Death Inlay, Fishman Fluence Tim Henson Signature Pickups."
+  },
+  {
+    title: "Fender Stratocaster Olympic White",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSnANO7jljpWGZX41ofp1rWvzwj0ZwA4vqLW1FaOgDcMn6iTPEMQ0ufQXA&s=10",
+    song: "The Jimi Hendrix Experience - Voodoo Child (Live In Maui, 1970)",
+    youtubeId: "s6jzgs0ubSU",
+    specs: "Olympic White, Vintage Maple Fretboard, Hand-wound single-coil pickups capturing the authentic 60s spirit."
+  },
+  {
+    title: "Fender Stratocaster HSS",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSjCU6s0zrJ8lWVmZ0uJ-SK0YSEKvI8Y3j6NHbO3Nm3bBh2faah1x3yKdUj&s=10",
+    song: "Eric Clapton - Layla (Live at Royal Albert Hall, 1991)",
+    youtubeId: "VIejt9F9NfA",
+    specs: "Black Finish with White Pickguard, HSS Pickup Configuration delivering versatile blues and rock tones."
+  },
+  {
+    title: "Gibson SG Standard",
+    img: "https://guitarfactory.net/cdn/shop/files/GibsonSGStandard-01_e0baea13-ba49-4d2d-9919-04be87f75b13.jpg?v=1754964103",
+    song: "AC/DC - Back In Black (Live at Donington, 1991)",
+    youtubeId: "pAgnJDJN4VA",
+    specs: "Heritage Cherry Red, Dual Humbuckers, Lightweight mahogany body with iconic high-fret access."
+  },
+  {
+    title: "Martin OM-28 Acoustic",
+    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWHHSO1C5l95_cvJ1fw2PDaxb190CBTCMQ_CxE45AKD-CNuurnciJGlhnV&s=10",
+    song: "John Mayer - Neon (Live In LA)",
+    youtubeId: "_DfQC5qHhbo",
+    specs: "Natural Spruce Top, East Indian Rosewood back and sides, exceptional fingerstyle clarity and warmth."
+  }
+];
+
+let currentIndex = 0;
+let mouseX = 0;
+let mouseY = 0;
+
+// เปิดหน้า Detail กีต้าร์
+function openDetail(index) {
+  currentIndex = index;
+  renderDetail();
+  
+  window.location.hash = "guitar-detail";
+  showPage();
+}
+
+function renderDetail() {
+  const guitar = guitarsData[currentIndex];
+  document.getElementById("det-img").src = guitar.img;
+  document.getElementById("det-title").innerText = guitar.title;
+  document.getElementById("det-song").innerText = guitar.song;
+  document.getElementById("det-specs").innerText = guitar.specs;
+}
+
+function nextGuitar() {
+  currentIndex = (currentIndex + 1) % guitarsData.length;
+  renderDetail();
+}
+
+function prevGuitar() {
+  currentIndex = (currentIndex - 1 + guitarsData.length) % guitarsData.length;
+  renderDetail();
+}
+
+function goBackToArchive() {
+  window.location.hash = "collection";
+  showPage();
+}
+
+// ควบคุม Modal เปิด-ปิด วิดีโอ YouTube
+function playMusicModal() {
+  const guitar = guitarsData[currentIndex];
+  const iframe = document.getElementById("youtubePlayer");
+  iframe.src = `https://www.youtube.com/embed/${guitar.youtubeId}?autoplay=1`;
+  document.getElementById("videoModal").classList.add("active");
+}
+
+function closeMusicModal(e) {
+  if (e.target.id === "videoModal") {
+    closeMusicModalDirect();
+  }
+}
+
+function closeMusicModalDirect() {
+  const iframe = document.getElementById("youtubePlayer");
+  iframe.src = "";
+  document.getElementById("videoModal").classList.remove("active");
+}
+
+// Navigation & Page Display Logic (Fixed routing)
 const pages = document.querySelectorAll(".page");
 const navLinks = document.querySelectorAll("nav a");
 
 function showPage() {
-  // Extract target ID from hash or fallback to 'home'
   const hash = window.location.hash.slice(1);
   const targetId = hash || "home";
-  const targetPage = document.getElementById(targetId);
   
-  // Validate if target page exists, otherwise fallback to home
-  const activeId = (targetPage && targetPage.classList.contains("page")) ? targetId : "home";
+  // Verify target element exists
+  const targetPage = document.getElementById(targetId);
+  const activeId = targetPage ? targetId : "home";
 
-  // Switch active class on pages
   pages.forEach(page => {
     if (page.id === activeId) {
       page.classList.add("active");
@@ -730,7 +1143,6 @@ function showPage() {
     }
   });
 
-  // Switch active state on navigation links
   navLinks.forEach(link => {
     const pageAttr = link.getAttribute("data-page");
     if (pageAttr === activeId) {
@@ -740,34 +1152,195 @@ function showPage() {
     }
   });
 
-  // Scroll to top of the page smoothly
   window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Re-check animation observers for newly visible content
+  setTimeout(initScrollReveal, 50);
 }
 
-// Intercept all internal anchor clicks for reliable cross-browser navigation
-document.addEventListener("click", function (e) {
-  const anchor = e.target.closest('a[href^="#"]');
-  if (anchor) {
-    e.preventDefault();
-    const targetHash = anchor.getAttribute("href");
+window.addEventListener("popstate", showPage);
+window.addEventListener("hashchange", showPage);
+
+// ===== ENHANCED VISUAL EFFECTS & CANVAS PARTICLES ===== //
+
+// 1. Floating Gold/Blue Dust Particle Canvas
+const canvas = document.getElementById('particlesCanvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class DustParticle {
+  constructor() {
+    this.reset();
+  }
+  
+  reset() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * 2 + 0.5;
+    this.vx = (Math.random() - 0.5) * 0.4;
+    this.vy = -Math.random() * 0.5 - 0.1;
+    this.alpha = Math.random() * 0.6 + 0.1;
+    this.color = Math.random() > 0.5 ? '234, 179, 8' : '59, 130, 246';
+  }
+  
+  update() {
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Mouse repulsion effect
+    const dx = this.x - mouseX;
+    const dy = this.y - mouseY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < 120) {
+      const angle = Math.atan2(dy, dx);
+      const force = (120 - dist) / 120;
+      this.x += Math.cos(angle) * force * 2;
+      this.y += Math.sin(angle) * force * 2;
+    }
+
+    if (this.y < -10 || this.x < -10 || this.x > canvas.width + 10) {
+      this.reset();
+      this.y = canvas.height + 10;
+    }
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+    ctx.fill();
+  }
+}
+
+for (let i = 0; i < 70; i++) {
+  particles.push(new DustParticle());
+}
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.update();
+    p.draw();
+  });
+  requestAnimationFrame(animateParticles);
+}
+
+// 2. Magnetic Button FX
+function initMagneticButtons() {
+  const magBtns = document.querySelectorAll('.magnetic-btn');
+  magBtns.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const rect = btn.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = `translate(0px, 0px)`;
+    });
+  });
+}
+
+// 3. Cursor Tracking Glow Effect
+const cursorGlow = document.getElementById('cursorGlow');
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  if (cursorGlow) {
+    cursorGlow.style.left = `${e.clientX}px`;
+    cursorGlow.style.top = `${e.clientY}px`;
+  }
+});
+
+// 4. Click Ripple FX
+document.addEventListener('click', (e) => {
+  const ripple = document.createElement('div');
+  ripple.className = 'click-ripple';
+  ripple.style.left = `${e.clientX}px`;
+  ripple.style.top = `${e.clientY}px`;
+  document.body.appendChild(ripple);
+  
+  setTimeout(() => {
+    ripple.remove();
+  }, 600);
+});
+
+// 5. Scroll Reveal Observer
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+function initScrollReveal() {
+  document.querySelectorAll('.item-card, .section, .two-col').forEach(el => {
+    el.classList.add('reveal');
+    revealObserver.observe(el);
+  });
+}
+
+// 6. 3D Tilt Effect on Item Cards
+function init3DTilt() {
+  const cards = document.querySelectorAll('.item-card');
+  cards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      
+      const rotateX = ((y - centerY) / centerY) * -8;
+      const rotateY = ((x - centerX) / centerX) * 8;
+
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-4px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)`;
+    });
+  });
+}
+
+// 7. Parallax Scrolling Effect on Home Page
+window.addEventListener('scroll', () => {
+  const homePage = document.getElementById('home');
+  if (homePage.classList.contains('active')) {
+    const scrollY = window.pageYOffset;
     
-    // Update hash in URL and trigger page view update
-    if (window.location.hash !== targetHash) {
-      history.pushState(null, null, targetHash);
-      showPage();
-    } else {
-      showPage();
+    const parallaxTitle = document.querySelector('.parallax-title');
+    const parallaxHero = document.querySelector('.parallax-hero');
+    const parallaxSection = document.querySelector('.parallax-section');
+
+    if (parallaxTitle) {
+      parallaxTitle.style.transform = `translateY(${scrollY * 0.12}px)`;
+    }
+    if (parallaxHero) {
+      parallaxHero.style.transform = `translateY(${scrollY * 0.06}px)`;
+    }
+    if (parallaxSection) {
+      parallaxSection.style.transform = `translateY(${scrollY * 0.02}px)`;
     }
   }
 });
 
-// Handle browser Back / Forward buttons
-window.addEventListener("popstate", showPage);
-window.addEventListener("hashchange", showPage);
-
-// Initial page load trigger
-document.addEventListener("DOMContentLoaded", showPage);
-showPage();
+document.addEventListener("DOMContentLoaded", () => {
+  showPage();
+  initScrollReveal();
+  init3DTilt();
+  initMagneticButtons();
+  animateParticles();
+});
 </script>
 
 </body>
